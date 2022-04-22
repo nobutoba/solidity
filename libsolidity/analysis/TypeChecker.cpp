@@ -1596,7 +1596,8 @@ bool TypeChecker::visit(TupleExpression const& _tuple)
 				{
 					if (_tuple.isInlineArray())
 						m_errorReporter.typeError(5604_error, components[i]->location(), "Array component cannot be empty.");
-					m_errorReporter.typeError(6473_error, components[i]->location(), "Tuple component cannot be empty.");
+					else
+						m_errorReporter.typeError(6473_error, components[i]->location(), "Tuple component cannot be empty.");
 				}
 
 			// Note: code generation will visit each of the expression even if they are not assigned from.
@@ -1604,15 +1605,19 @@ bool TypeChecker::visit(TupleExpression const& _tuple)
 				if (!dynamic_cast<RationalNumberType const&>(*types[i]).mobileType())
 					m_errorReporter.fatalTypeError(3390_error, components[i]->location(), "Invalid rational number.");
 
-			if (_tuple.isInlineArray() and types[i]->category() != Type::Category::InlineArray)
+			if (_tuple.isInlineArray() &&
+				types[i]->category() != Type::Category::InlineArray)
 			{
-				if (!types[i]->mobileType()->nameable())
+				Type const* mobileType = types[i]->mobileType();
+				if (!mobileType)
+					m_errorReporter.fatalTypeError(9563_error, components[i]->location(), "Invalid mobile type.");
+				else if (!mobileType->nameable())
 					m_errorReporter.fatalTypeError(
 						9656_error,
 						_tuple.location(),
 						"Unable to deduce nameable type for array elements. Try adding explicit type conversion for the first element."
 					);
-				else if (types[i]->mobileType()->containsNestedMapping())
+				else if (mobileType->containsNestedMapping())
 					m_errorReporter.fatalTypeError(
 						1545_error,
 						_tuple.location(),
@@ -3367,6 +3372,8 @@ bool TypeChecker::visit(IndexRangeAccess const& _access)
 	ArrayType const* arrayType = nullptr;
 	if (auto const* arraySlice = dynamic_cast<ArraySliceType const*>(exprType))
 		arrayType = &arraySlice->arrayType();
+	else if (auto const* inlineArray = dynamic_cast<InlineArrayType const*>(exprType))
+		arrayType = TypeProvider::array(DataLocation::Memory, inlineArray->componentsCommonMobileType(), inlineArray->components().size());
 	else if (!(arrayType = dynamic_cast<ArrayType const*>(exprType)))
 		m_errorReporter.fatalTypeError(4781_error, _access.location(), "Index range access is only possible for arrays and array slices.");
 

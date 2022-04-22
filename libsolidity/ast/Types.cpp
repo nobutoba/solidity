@@ -2700,7 +2700,9 @@ Type const* TupleType::mobileType() const
 
 BoolResult InlineArrayType::isImplicitlyConvertibleTo(Type const& _other) const
 {
-	if (auto arrayType = dynamic_cast<ArrayType const*>(&_other))
+	auto arrayType = dynamic_cast<ArrayType const*>(&_other);
+
+	if (arrayType && !arrayType->isByteArrayOrString())
 	{
 		if (!arrayType->isDynamicallySized())
 		{
