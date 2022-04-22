@@ -2288,9 +2288,9 @@ void IRGeneratorForStatements::endVisit(IndexAccess const& _indexAccess)
 			")";
 
 		setLValue(_indexAccess, IRLValue{
-				  *arrayType->baseType(),
-				   IRLValue::Memory{memAddress}
-				   });
+			*arrayType->baseType(),
+			IRLValue::Memory{memAddress}
+		});
 
 // TODO: replace "setLValue" with define to block following syntax "[0,1,2][0] = 3"
 //		define(IRVariable(IRNames::localVariable(_indexAccess), *baseType),

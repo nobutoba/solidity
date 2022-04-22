@@ -1934,7 +1934,7 @@ string YulUtilFunctions::copyInlineArrayToStorageFunction(InlineArrayType const&
 		("storageStride", to_string(_toType.storageStride()))
 		("storageSize", _toType.baseType()->storageSize().str())
 		("updateStorageValue", updateStorageValueFunction(*_fromType.componentsCommonMobileType(), *_toType.baseType()))
-	   .render();
+		.render();
 
 		stackItemIndex += type->sizeOnStack();
 	}
@@ -3847,7 +3847,7 @@ string YulUtilFunctions::inlineArrayConversionFunction(InlineArrayType const& _f
 		("value", suffixedVariableNameList("var_", stackItemIndex, stackItemIndex + type->sizeOnStack()))
 		("conversionFunction", conversionFunction(*type, *_to.baseType()))
 		("writeToMemory", writeToMemoryFunction(*_to.baseType()))
-	   .render();
+		.render();
 
 		stackItemIndex += type->sizeOnStack();
 	}

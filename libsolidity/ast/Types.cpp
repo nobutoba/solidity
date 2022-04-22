@@ -2774,7 +2774,7 @@ Type const* InlineArrayType::mobileType() const
 Type const* InlineArrayType::componentsCommonMobileType() const
 {
 	Type const* commonType = nullptr;
-	for (Type const* type : m_components)
+	for (Type const* type: m_components)
 		commonType = commonType ?
 					Type::commonType(commonType, type->mobileType()) : type->mobileType();
 	return TypeProvider::withLocationIfReference(DataLocation::Memory, commonType);

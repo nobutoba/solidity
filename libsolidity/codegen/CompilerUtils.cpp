@@ -1146,9 +1146,9 @@ void CompilerUtils::convertType(
 
 		// stack: <mem start> <source ref> <mem data pos>
 		unsigned depth = inlineArray.sizeOnStack() + 1;
-		for (Type const* component : inlineArray.components())
+		for (Type const* component: inlineArray.components())
 		{
-			const unsigned componentSize = component->sizeOnStack();
+			unsigned const componentSize = component->sizeOnStack();
 			copyToStackTop(depth, componentSize);
 			// stack: <mem start> <source ref> <mem data pos> <value>
 			convertType(*component, *arrayType.baseType());
